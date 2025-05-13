@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caffeine Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,6 +18,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         h1 {
             color: #2c3e50;
@@ -67,6 +69,21 @@
         .history-item:last-child {
             border-bottom: none;
         }
+        .graph-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .graph-container h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
     </style>
 </head>
 <body>
@@ -94,7 +111,61 @@
         </div>
     </div>
 
+    <div class="graph-container">
+        <h2>Caffeine Level Over Time</h2>
+        <canvas id="caffeineChart"></canvas>
+    </div>
+
     <script>
+        // Initialize the chart
+        const ctx = document.getElementById('caffeineChart').getContext('2d');
+        const caffeineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Caffeine Level (mg)',
+                    data: [],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Caffeine (mg)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+
+        // Store historical data
+        let historicalData = {
+            times: [],
+            levels: []
+        };
+
         // Update stats every 5 seconds
         setInterval(updateStats, 5000);
         
@@ -106,8 +177,24 @@
             fetch('/api/caffeine-level')
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('currentLevel').textContent = 
-                        Math.round(data.level * 100) / 100;
+                    const level = Math.round(data.level * 100) / 100;
+                    document.getElementById('currentLevel').textContent = level;
+                    
+                    // Update chart data
+                    const now = new Date();
+                    historicalData.times.push(now.toLocaleTimeString());
+                    historicalData.levels.push(level);
+                    
+                    // Keep only last 20 data points
+                    if (historicalData.times.length > 20) {
+                        historicalData.times.shift();
+                        historicalData.levels.shift();
+                    }
+                    
+                    // Update chart
+                    caffeineChart.data.labels = historicalData.times;
+                    caffeineChart.data.datasets[0].data = historicalData.levels;
+                    caffeineChart.update();
                 });
 
             // Get coffee history
