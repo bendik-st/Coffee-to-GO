@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race Preparation & Caffeine Optimization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #f8f9fa;
+        }
+        .prep-planner {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .prep-plan {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .day-plan {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .day-plan h4 {
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+        }
+        .day-plan p {
+            margin: 5px 0;
+            color: #7f8c8d;
+        }
+        .guide-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .guide-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .guide-section p,
+        .guide-section ul {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        .guide-section ul {
+            padding-left: 20px;
+        }
+        .guide-section li {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/forecast.html">Forecast</a>
+        <a href="/race.html">Race Planner</a>
+        <a href="/race-prep.html">Race Prep</a>
+    </div>
+
+    <div class="container">
+        <h1>🏃 Race Preparation & Caffeine Optimization</h1>
+        
+        <div class="prep-planner">
+            <h2>Create Your 2-Week Race Preparation Plan</h2>
+            <div class="input-group">
+                <label for="raceDate">Race Date</label>
+                <input type="date" id="raceDate" required>
+            </div>
+            <div class="input-group">
+                <label for="currentIntake">Current Daily Caffeine Intake (mg)</label>
+                <input type="number" id="currentIntake" min="0" max="1000" value="200" required>
+            </div>
+            <div class="input-group">
+                <label for="withdrawalStrategy">Caffeine Withdrawal Strategy</label>
+                <select id="withdrawalStrategy">
+                    <option value="moderate">Moderate Taper (Recommended)</option>
+                    <option value="aggressive">Aggressive Taper</option>
+                    <option value="maintain">Maintain Current Intake</option>
+                </select>
+            </div>
+            <button onclick="generatePrepPlan()">Generate Plan</button>
+        </div>
+
+        <div id="prepPlan" class="prep-plan" style="display: none;">
+            <!-- Plan will be inserted here -->
+        </div>
+
+        <div class="guide-section">
+            <h2>Understanding Caffeine Optimization for Race Day</h2>
+            
+            <h3>Individual Variability & Personalization</h3>
+            <p>Your response to caffeine is unique and influenced by several factors:</p>
+            <ul>
+                <li><strong>Genetics:</strong> Your genes (like CYP1A2 and ADORA2A) affect how you process caffeine</li>
+                <li><strong>Current Tolerance:</strong> Regular caffeine use can reduce its effects</li>
+                <li><strong>Body Mass:</strong> Affects optimal dosage</li>
+                <li><strong>Side Effect Sensitivity:</strong> Some people are more prone to negative effects</li>
+            </ul>
+
+            <div class="warning">
+                <strong>Important:</strong> Never attempt a new caffeine strategy for the first time before an important race. Always test your plan during training.
+            </div>
+
+            <h3>Withdrawal Strategy Considerations</h3>
+            <p>There are three main approaches to caffeine intake before a race:</p>
+            <ul>
+                <li><strong>Moderate Taper (Recommended):</strong> Gradually reduce intake over 7-10 days</li>
+                <li><strong>Aggressive Taper:</strong> More rapid reduction over 4-7 days</li>
+                <li><strong>Maintain Current Intake:</strong> Keep regular intake and use race-day boost</li>
+            </ul>
+
+            <h3>Potential Withdrawal Symptoms</h3>
+            <p>Be aware of possible symptoms during caffeine reduction:</p>
+            <ul>
+                <li>Headaches</li>
+                <li>Fatigue</li>
+                <li>Irritability</li>
+                <li>Difficulty concentrating</li>
+                <li>Muscle pain</li>
+            </ul>
+
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Test your strategy during training</li>
+                <li>Stay hydrated throughout the process</li>
+                <li>Monitor your sleep quality</li>
+                <li>Adjust based on how you feel</li>
+                <li>Consider your training schedule when planning withdrawal</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function generatePrepPlan() {
+            const raceDate = new Date(document.getElementById('raceDate').value);
+            const currentIntake = parseInt(document.getElementById('currentIntake').value);
+            const strategy = document.getElementById('withdrawalStrategy').value;
+
+            if (!raceDate || isNaN(raceDate.getTime())) {
+                alert('Please select a valid race date');
+                return;
+            }
+
+            const planDiv = document.getElementById('prepPlan');
+            planDiv.style.display = 'block';
+
+            // Calculate dates for the 2-week period
+            const startDate = new Date(raceDate);
+            startDate.setDate(startDate.getDate() - 14);
+
+            let planHTML = `
+                <h3>Your 2-Week Race Preparation Plan</h3>
+                <p>Race Date: ${raceDate.toLocaleDateString()}</p>
+                <p>Current Daily Intake: ${currentIntake}mg</p>
+                <p>Strategy: ${strategy}</p>
+                <div class="day-plans">
+            `;
+
+            // Generate plan for each day
+            for (let i = 0; i < 14; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
+                const daysUntilRace = 14 - i;
+
+                let caffeineAmount;
+                let notes;
+
+                if (strategy === 'moderate') {
+                    if (daysUntilRace > 7) {
+                        caffeineAmount = currentIntake;
+                        notes = 'Maintain current intake';
+                    } else if (daysUntilRace > 3) {
+                        caffeineAmount = Math.round(currentIntake * 0.5);
+                        notes = 'Reduce to 50% of normal intake';
+                    } else {
+                        caffeineAmount = 0;
+                        notes = 'Complete withdrawal period';
+                    }
+                } else if (strategy === 'aggressive') {
+                    if (daysUntilRace > 4) {
+                        caffeineAmount = currentIntake;
+                        notes = 'Maintain current intake';
+                    } else {
+                        caffeineAmount = 0;
+                        notes = 'Complete withdrawal period';
+                    }
+                } else {
+                    caffeineAmount = currentIntake;
+                    notes = 'Maintain regular intake';
+                }
+
+                planHTML += `
+                    <div class="day-plan">
+                        <h4>Day ${i + 1} (${currentDate.toLocaleDateString()})</h4>
+                        <p><strong>Days until race:</strong> ${daysUntilRace}</p>
+                        <p><strong>Caffeine intake:</strong> ${caffeineAmount}mg</p>
+                        <p><strong>Notes:</strong> ${notes}</p>
+                    </div>
+                `;
+            }
+
+            planHTML += `
+                </div>
+                <div class="warning">
+                    <strong>Important Notes:</strong>
+                    <ul>
+                        <li>This plan is a general guideline. Adjust based on how you feel.</li>
+                        <li>Stay hydrated throughout the process.</li>
+                        <li>Monitor your sleep quality and training performance.</li>
+                        <li>If you experience severe withdrawal symptoms, consider a more gradual reduction.</li>
+                    </ul>
+                </div>
+            `;
+
+            planDiv.innerHTML = planHTML;
+        }
+    </script>
+</body>
+</html> 
