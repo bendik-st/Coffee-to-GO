@@ -223,32 +223,41 @@
             const planDiv = document.getElementById('prepPlan');
             planDiv.style.display = 'block';
 
-            // Calculate dates for the 2-week period
+            // Calculate days until race
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const daysUntilRace = Math.ceil((raceDate - today) / (1000 * 60 * 60 * 24));
+
+            // Determine number of days to show in plan
+            const planDays = daysUntilRace <= 3 ? 3 : Math.min(daysUntilRace, 10);
+
+            // Calculate start date for the plan
             const startDate = new Date(raceDate);
-            startDate.setDate(startDate.getDate() - 14);
+            startDate.setDate(startDate.getDate() - planDays);
 
             let planHTML = `
-                <h3>Your 2-Week Race Preparation Plan</h3>
+                <h3>Your ${planDays}-Day Race Preparation Plan</h3>
                 <p>Race Date: ${raceDate.toLocaleDateString()}</p>
+                <p>Days until race: ${daysUntilRace}</p>
                 <p>Current Daily Intake: ${currentIntake}mg</p>
                 <p>Strategy: ${strategy}</p>
                 <div class="day-plans">
             `;
 
             // Generate plan for each day
-            for (let i = 0; i < 14; i++) {
+            for (let i = 0; i < planDays; i++) {
                 const currentDate = new Date(startDate);
                 currentDate.setDate(startDate.getDate() + i);
-                const daysUntilRace = 14 - i;
+                const daysUntilRace = planDays - i;
 
                 let caffeineAmount;
                 let notes;
 
                 if (strategy === 'moderate') {
-                    if (daysUntilRace > 7) {
+                    if (daysUntilRace > 4) {
                         caffeineAmount = currentIntake;
                         notes = 'Maintain current intake';
-                    } else if (daysUntilRace > 3) {
+                    } else if (daysUntilRace > 2) {
                         caffeineAmount = Math.round(currentIntake * 0.5);
                         notes = 'Reduce to 50% of normal intake';
                     } else {
@@ -256,7 +265,7 @@
                         notes = 'Complete withdrawal period';
                     }
                 } else if (strategy === 'aggressive') {
-                    if (daysUntilRace > 4) {
+                    if (daysUntilRace > 2) {
                         caffeineAmount = currentIntake;
                         notes = 'Maintain current intake';
                     } else {
