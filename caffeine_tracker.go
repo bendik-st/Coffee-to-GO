@@ -25,6 +25,14 @@ type DrinkRequest struct {
 	Amount float64 `json:"amount"`
 }
 
+// ForecastPoint represents a point in time with predicted caffeine level
+type ForecastPoint struct {
+	Time        time.Time `json:"time"`
+	Caffeine    float64   `json:"caffeine"`
+	HasDrink    bool      `json:"hasDrink"`
+	DrinkAmount float64   `json:"drinkAmount,omitempty"`
+}
+
 // Tracker holds the state of coffee intake events.
 // It's made thread-safe with a mutex for potential concurrent access in a real server.
 type Tracker struct {
@@ -52,12 +60,11 @@ func (t *Tracker) AddDrink(amount float64) {
 	fmt.Printf("Logged drink at %s. Current count: %d\n", event.Time.Format("15:04:05"), len(t.events))
 }
 
-// CalculateCurrentCaffeineLevel calculates the total estimated caffeine in the system.
-func (t *Tracker) CalculateCurrentCaffeineLevel() float64 {
+// CalculateCaffeineLevelAt calculates the caffeine level at a specific time
+func (t *Tracker) CalculateCaffeineLevelAt(targetTime time.Time) float64 {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	now := time.Now()
 	totalCaffeine := 0.0
 
 	if len(t.events) == 0 {
@@ -65,10 +72,9 @@ func (t *Tracker) CalculateCurrentCaffeineLevel() float64 {
 	}
 
 	for _, event := range t.events {
-		timeElapsed := now.Sub(event.Time)
+		timeElapsed := targetTime.Sub(event.Time)
 		timeElapsedHours := timeElapsed.Hours()
 
-		// Only consider events that have already happened
 		if timeElapsedHours < 0 {
 			continue
 		}
@@ -79,6 +85,38 @@ func (t *Tracker) CalculateCurrentCaffeineLevel() float64 {
 	}
 
 	return totalCaffeine
+}
+
+// GenerateForecast generates a forecast of caffeine levels for the next 24 hours
+func (t *Tracker) GenerateForecast() []ForecastPoint {
+	now := time.Now()
+	forecast := make([]ForecastPoint, 0)
+
+	// Generate points for every 30 minutes for the next 24 hours
+	for i := 0; i < 48; i++ {
+		targetTime := now.Add(time.Duration(i*30) * time.Minute)
+		caffeine := t.CalculateCaffeineLevelAt(targetTime)
+
+		// Check if there's a drink at this time
+		var hasDrink bool
+		var drinkAmount float64
+		for _, event := range t.events {
+			if event.Time.Format("15:04") == targetTime.Format("15:04") {
+				hasDrink = true
+				drinkAmount = event.Amount
+				break
+			}
+		}
+
+		forecast = append(forecast, ForecastPoint{
+			Time:        targetTime,
+			Caffeine:    caffeine,
+			HasDrink:    hasDrink,
+			DrinkAmount: drinkAmount,
+		})
+	}
+
+	return forecast
 }
 
 // GetEvents returns all coffee intake events
@@ -119,8 +157,17 @@ func main() {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		level := tracker.CalculateCurrentCaffeineLevel()
+		level := tracker.CalculateCaffeineLevelAt(time.Now())
 		json.NewEncoder(w).Encode(map[string]float64{"level": level})
+	})
+
+	http.HandleFunc("/api/forecast", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		forecast := tracker.GenerateForecast()
+		json.NewEncoder(w).Encode(forecast)
 	})
 
 	http.HandleFunc("/api/events", func(w http.ResponseWriter, r *http.Request) {

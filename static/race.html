@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race Caffeine Planner</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #f8f9fa;
+        }
+        .race-planner {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .race-planner h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .race-inputs {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .input-group label {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        .input-group input,
+        .input-group select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        .race-plan {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .race-plan h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .plan-step {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .best-practices {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .best-practices h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .practice-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .practice-item h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .practice-item p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .comprehensive-guide {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .comprehensive-guide h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .comprehensive-guide h3 {
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+        }
+        .comprehensive-guide p {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .comprehensive-guide ul {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        .comprehensive-guide li {
+            margin-bottom: 8px;
+        }
+        .comprehensive-guide strong {
+            color: #2c3e50;
+        }
+        .comprehensive-guide .disclaimer {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/forecast.html">Forecast</a>
+        <a href="/race.html">Race Planner</a>
+    </div>
+
+    <div class="container">
+        <h1>🏃 Race Caffeine Planner</h1>
+        
+        <div class="race-planner">
+            <h2>Plan Your Race Caffeine Strategy</h2>
+            <div class="race-inputs">
+                <div class="input-group">
+                    <label for="raceTime">Target Race Time</label>
+                    <input type="time" id="raceTime">
+                </div>
+                <div class="input-group">
+                    <label for="raceDuration">Race Duration</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="raceDurationHours" min="0" max="24" value="0" style="width: 80px;">
+                        <span>hours</span>
+                        <input type="number" id="raceDurationMinutes" min="0" max="59" value="0" style="width: 80px;">
+                        <span>minutes</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="caffeineAmount">Total Caffeine (mg)</label>
+                    <select id="caffeineAmount">
+                        <option value="200">200mg</option>
+                        <option value="250">250mg</option>
+                        <option value="300">300mg</option>
+                        <option value="350">350mg</option>
+                        <option value="400">400mg</option>
+                        <option value="500">500mg</option>
+                        <option value="600">600mg</option>
+                        <option value="750">750mg</option>
+                        <option value="800">800mg</option>
+                        <option value="900">900mg</option>
+                        <option value="1000">1000mg</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="caffeineType">Caffeine Source</label>
+                    <select id="caffeineType">
+                        <option value="pills">Caffeine Pills</option>
+                        <option value="coffee">Coffee</option>
+                        <option value="energy">Energy Drinks</option>
+                    </select>
+                </div>
+                <button onclick="calculateRacePlan()" style="align-self: flex-end;">Calculate Plan</button>
+            </div>
+            <div id="racePlan" class="race-plan" style="display: none;">
+                <!-- Race plan will be inserted here -->
+            </div>
+        </div>
+
+        <div class="best-practices">
+            <h2>Caffeine Best Practices for Athletes</h2>
+            <div class="practice-item">
+                <h3>Timing</h3>
+                <p>Take caffeine 30-60 minutes before exercise for optimal absorption. Peak blood levels occur around 45 minutes after ingestion.</p>
+            </div>
+            <div class="practice-item">
+                <h3>Dosage</h3>
+                <p>3-6 mg/kg of body weight is the recommended range. For a 70kg athlete, this means 210-420mg. Start with lower doses and adjust based on tolerance.</p>
+            </div>
+            <div class="practice-item">
+                <h3>Tolerance</h3>
+                <p>Regular caffeine users may need higher doses for the same effect. Consider a 7-day taper before important events to reset tolerance.</p>
+            </div>
+            <div class="practice-item">
+                <h3>Hydration</h3>
+                <p>Caffeine is a mild diuretic. Ensure proper hydration before, during, and after exercise when using caffeine.</p>
+            </div>
+            <div class="practice-item">
+                <h3>Side Effects</h3>
+                <p>Monitor for jitteriness, increased heart rate, or gastrointestinal issues. Adjust dosage if these occur.</p>
+            </div>
+        </div>
+
+        <div class="comprehensive-guide">
+            <h2>Optimizing Caffeine Intake for Peak Performance in Professional Endurance Racing</h2>
+            <p>Caffeine is a well-established and widely used ergogenic aid among professional endurance athletes, consistently shown to enhance performance. For sports like running and cycling, where sustained effort is paramount, a strategic approach to caffeine intake can provide a significant competitive edge. This guide synthesizes current research to help athletes perfect their caffeine strategy.</p>
+
+            <h3>1. Understanding Caffeine's Benefits:</h3>
+            <p>Caffeine primarily works by:</p>
+            <ul>
+                <li><strong>Antagonizing adenosine receptors:</strong> This reduces the perception of effort and pain, delaying fatigue.</li>
+                <li><strong>Stimulating the Central Nervous System (CNS):</strong> This increases alertness, focus, vigilance, and motivation.</li>
+                <li><strong>Enhancing muscle contractility:</strong> Potentially by increasing calcium ion mobilization within muscle cells.</li>
+                <li><strong>Increasing catecholamine release (e.g., adrenaline):</strong> This can boost energy production and improve blood flow.</li>
+            </ul>
+            <p>Research consistently shows performance improvements in the range of <strong>2-4%</strong> in endurance events, though individual responses can vary more widely.</p>
+
+            <h3>2. Optimal Dosage: Finding Your Sweet Spot</h3>
+            <ul>
+                <li><strong>General Recommendation:</strong> The most common and effective dosage range is <strong>3-6 milligrams of caffeine per kilogram of body mass (mg/kg BM)</strong>.
+                    <ul>
+                        <li>For a 70 kg (154 lb) athlete, this translates to 210-420 mg of caffeine.</li>
+                    </ul>
+                </li>
+                <li><strong>Lower Doses Can Be Effective:</strong> Some research indicates that even lower doses, around <strong>1-3 mg/kg BM (approx. 70-210 mg for a 70kg athlete)</strong>, can provide performance benefits, especially for individuals sensitive to caffeine or to minimize side effects. Doses around <strong>200 mg total</strong> are often cited as a beneficial and well-tolerated amount for many.</li>
+                <li><strong>Higher Doses (e.g., >9 mg/kg BM):</strong> Generally, doses exceeding 6 mg/kg BM do <strong>not</strong> provide additional performance enhancement and significantly increase the risk of negative side effects (anxiety, jitters, gastrointestinal distress, impaired sleep).</li>
+                <li><strong>Individualization is Key:</strong> The "optimal" dose is highly individual. Athletes must experiment during training to find what works best for them.</li>
+            </ul>
+
+            <h3>3. Timing of Intake: Pre-Race and During-Race Strategies</h3>
+            <ul>
+                <li><strong>Pre-Race (Primary Dose):</strong>
+                    <ul>
+                        <li>Consume caffeine approximately <strong>30-60 minutes before the start</strong> of the race. This allows caffeine to be absorbed and reach peak concentration in the bloodstream as the event begins.</li>
+                    </ul>
+                </li>
+                <li><strong>During-Race (for Longer Events):</strong>
+                    <ul>
+                        <li>Caffeine has a half-life of roughly <strong>4-5 hours</strong> (can vary individually). For longer races, "topping up" caffeine levels can help maintain its ergogenic effects as the initial dose wears off.</li>
+                        <li>This is particularly beneficial in the later stages of a race when fatigue sets in.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>4. Single Dose vs. Divided Doses: Tailoring to Race Duration</h3>
+            <ul>
+                <li><strong>Shorter Races (e.g., up to ~3 hours):</strong>
+                    <ul>
+                        <li>A <strong>single pre-race dose</strong> (3-6 mg/kg BM) taken 30-60 minutes prior is often sufficient for many athletes. The effects should last for the duration of such events.</li>
+                    </ul>
+                </li>
+                <li><strong>Longer Races (e.g., >3-5 hours, such as marathons, long-course triathlons, extended cycling road races):</strong>
+                    <ul>
+                        <li><strong>Initial Pre-Race Dose:</strong> Start with a dose of 3-6 mg/kg BM (or your individually optimized lower dose) 30-60 minutes before the race.</li>
+                        <li><strong>Divided/Split Doses During the Race:</strong>
+                            <ul>
+                                <li>Consume smaller, regular "top-up" doses of caffeine during the event. This could be in the range of <strong>25-100 mg per hour</strong>, or slightly larger, less frequent doses (e.g., 100-200mg) at strategic points.</li>
+                                <li>The goal is to maintain effective plasma caffeine concentrations and combat accumulating fatigue.</li>
+                                <li>Consider taking a dose <strong>45-60 minutes before an anticipated difficult section or the final push</strong> of the race.</li>
+                                <li><strong>Example for a marathon:</strong> After an initial pre-race dose, an athlete might take 1-2 smaller doses (e.g., 50-100mg each) in the second half of the race, for instance, around the 20-25 km mark and again around the 30-35 km mark.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>5. Sources of Caffeine:</h3>
+            <p>Athletes can obtain caffeine from various sources. The choice often depends on convenience, personal preference, and gastrointestinal tolerance:</p>
+            <ul>
+                <li><strong>Coffee:</strong> A common source (approx. 80-120 mg per 8oz/237ml cup, but highly variable).</li>
+                <li><strong>Caffeine Pills/Tablets:</strong> Offer precise and controlled dosing.</li>
+                <li><strong>Energy Gels & Chews:</strong> Convenient for on-the-go consumption during races, often containing 20-100 mg per serving. Many are formulated with carbohydrates for combined energy delivery.</li>
+                <li><strong>Sports Drinks & Energy Drinks:</strong> Can provide caffeine, but athletes should be mindful of sugar content and other ingredients.</li>
+                <li><strong>Caffeinated Gum:</strong> May offer faster absorption through the buccal mucosa (lining of the mouth), potentially leading to effects within ~15-20 minutes. This can be useful for a quicker "hit."</li>
+            </ul>
+
+            <h3>6. Sport-Specific Considerations: Running vs. Cycling</h3>
+            <p>The fundamental physiological effects and optimal dosing strategies for caffeine are largely <strong>similar across endurance sports like running and cycling.</strong> Both benefit from caffeine's ability to reduce perceived exertion and delay fatigue.</p>
+            <ul>
+                <li><strong>Logistics of Intake:</strong> The main difference lies in the practicalities of consumption during the event.
+                    <ul>
+                        <li><strong>Cycling:</strong> It's generally easier to carry and consume various forms of nutrition and caffeine (gels, chews, drinks from bottles) while cycling.</li>
+                        <li><strong>Running:</strong> Runners often rely on more compact and easily digestible forms like gels or small chews, or what's available at aid stations.</li>
+                    </ul>
+                </li>
+                <li><strong>Research Focus:</strong> While much of the foundational caffeine research was conducted on cyclists, numerous studies and meta-analyses have confirmed significant ergogenic effects in endurance running as well (improved time to exhaustion and time trial performance).</li>
+            </ul>
+
+            <h3>7. The Critical Role of Individual Variability & Personalization</h3>
+            <p>Response to caffeine varies significantly among individuals due to several factors:</p>
+            <ul>
+                <li><strong>Genetics:</strong> Variations in genes like `CYP1A2` (which codes for the primary enzyme that metabolizes caffeine) and `ADORA2A` (adenosine A2A receptor gene) can influence how quickly an athlete metabolizes caffeine and how sensitive they are to its effects.
+                    <ul>
+                        <li>"Fast metabolizers" may clear caffeine more quickly and might benefit from slightly different timing or dosing.</li>
+                        <li>"Slow metabolizers" may experience effects for longer and could be more prone to side effects with higher doses.</li>
+                    </ul>
+                </li>
+                <li><strong>Habitual Caffeine Intake (Tolerance):</strong>
+                    <ul>
+                        <li>Regular caffeine consumers may develop some tolerance, meaning they might need a slightly higher dose to achieve the same effects as a caffeine-naive individual, or the effects might be somewhat blunted.</li>
+                        <li>However, research generally shows that even habitual users still experience performance benefits from acute caffeine supplementation.</li>
+                        <li><strong>Caffeine Withdrawal Strategy:</strong> Some studies suggest that abstaining from caffeine for about 7 days before a major competition <em>might</em> optimize its ergogenic effect by re-sensitizing adenosine receptors. However, this strategy can also lead to withdrawal symptoms (headaches, fatigue, irritability), which could negatively impact pre-race preparation. This is a highly individual decision and should be tested thoroughly. Many athletes perform well without a withdrawal period.</li>
+                    </ul>
+                </li>
+                <li><strong>Body Mass:</strong> Dosage is typically scaled to body mass.</li>
+                <li><strong>Sensitivity to Side Effects:</strong> Some individuals are more prone to anxiety, jitters, or gastrointestinal upset.</li>
+            </ul>
+
+            <p><strong>Crucially, ALL caffeine strategies (dosage, timing, source, single vs. split) MUST be trialed extensively in training sessions that mimic race conditions.</strong> This helps to:</p>
+            <ul>
+                <li>Identify the individual's optimal effective dose.</li>
+                <li>Determine the best timing for pre-race and during-race intake.</li>
+                <li>Assess tolerance for different caffeine sources.</li>
+                <li>Uncover and manage any potential negative side effects.</li>
+                <li>Refine the logistical aspects of carrying and consuming caffeine during the race.</li>
+            </ul>
+
+            <h3>8. Potential Side Effects:</h3>
+            <p>While generally safe and effective in recommended doses, caffeine can cause side effects, especially at higher intakes or in sensitive individuals:</p>
+            <ul>
+                <li>Gastrointestinal distress (stomach upset, nausea, diarrhea)</li>
+                <li>Increased heart rate and palpitations</li>
+                <li>Anxiety, nervousness, and jitters</li>
+                <li>Insomnia or disrupted sleep (especially if taken too late in the day relative to bedtime)</li>
+                <li>Headaches (can also be a withdrawal symptom)</li>
+                <li>Impaired fine motor control (at very high doses)</li>
+            </ul>
+
+            <h3>9. Key Takeaways for Professional Athletes:</h3>
+            <ul>
+                <li><strong>Standard Dose:</strong> Aim for 3-6 mg/kg BM, 30-60 minutes pre-race. Lower doses (1-3 mg/kg) can also be effective.</li>
+                <li><strong>Race Duration Dictates Strategy:</strong>
+                    <ul>
+                        <li><strong>Shorter races (<3 hrs):</strong> Single pre-race dose is often adequate.</li>
+                        <li><strong>Longer races (>3-5 hrs):</strong> Consider an initial pre-race dose followed by smaller, strategic "top-up" doses during the event (e.g., 25-100 mg/hour or targeted larger boosts).</li>
+                    </ul>
+                </li>
+                <li><strong>Individualize Through Practice:</strong> Your response is unique. Experiment rigorously in training with dose, timing, source, and single vs. split strategies.</li>
+                <li><strong>Listen to Your Body:</strong> Pay attention to how you feel and adjust accordingly. More is not always better.</li>
+                <li><strong>Hydration and Nutrition:</strong> Caffeine is a supplement, not a replacement for solid hydration and fueling plans. Ensure caffeine intake is integrated with overall race nutrition.</li>
+                <li><strong>Consider the Whole Picture:</strong> Factors like sleep quality leading up to the race, overall stress, and environmental conditions can also influence performance and caffeine's effects.</li>
+            </ul>
+
+            <p class="disclaimer"><strong>Disclaimer:</strong> This information is for educational purposes. Professional athletes should work closely with accredited sports dietitians, sports scientists, or team doctors to develop a personalized and safe caffeine strategy tailored to their specific needs, health status, and competitive goals.</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateRacePlan() {
+            const now = new Date();
+            const selectedTime = document.getElementById('raceTime').value;
+            const durationHours = parseInt(document.getElementById('raceDurationHours').value) || 0;
+            const durationMinutes = parseInt(document.getElementById('raceDurationMinutes').value) || 0;
+            
+            if (!selectedTime) {
+                alert('Please select a race time');
+                return;
+            }
+
+            if (durationHours === 0 && durationMinutes === 0) {
+                alert('Please enter race duration');
+                return;
+            }
+
+            // Parse the selected time
+            const [hours, minutes] = selectedTime.split(':').map(Number);
+            const raceTime = new Date(now);
+            raceTime.setHours(hours, minutes, 0, 0);
+
+            // If the selected time is earlier than current time, assume it's for tomorrow
+            if (raceTime < now) {
+                raceTime.setDate(raceTime.getDate() + 1);
+            }
+
+            const caffeineAmount = parseInt(document.getElementById('caffeineAmount').value);
+            const caffeineType = document.getElementById('caffeineType').value;
+            const totalDurationMinutes = (durationHours * 60) + durationMinutes;
+
+            // Calculate optimal timing based on race duration
+            const doses = [];
+            let remainingCaffeine = caffeineAmount;
+
+            if (totalDurationMinutes <= 180) { // 3 hours or less
+                // Single dose strategy for shorter races
+                const peakTime = new Date(raceTime.getTime() - 45 * 60000); // 45 minutes before race
+                doses.push({
+                    time: peakTime,
+                    amount: caffeineAmount,
+                    note: 'Single pre-race dose for peak effect at race start'
+                });
+            } else {
+                // Multiple dose strategy for longer races
+                // Initial pre-race dose (40% of total)
+                const initialDose = Math.round(caffeineAmount * 0.4);
+                const initialDoseTime = new Date(raceTime.getTime() - 60 * 60000); // 1 hour before race
+                doses.push({
+                    time: initialDoseTime,
+                    amount: initialDose,
+                    note: 'Initial pre-race dose'
+                });
+                remainingCaffeine -= initialDose;
+
+                // Calculate maintenance doses
+                const maintenanceDoseCount = Math.ceil(totalDurationMinutes / 120); // One dose every 2 hours
+                const maintenanceDoseAmount = Math.round(remainingCaffeine / maintenanceDoseCount);
+
+                for (let i = 0; i < maintenanceDoseCount; i++) {
+                    const doseTime = new Date(raceTime.getTime() + (i * 120 * 60000)); // Every 2 hours
+                    doses.push({
+                        time: doseTime,
+                        amount: maintenanceDoseAmount,
+                        note: `Maintenance dose ${i + 1} of ${maintenanceDoseCount}`
+                    });
+                }
+            }
+
+            // Display the plan
+            const planDiv = document.getElementById('racePlan');
+            planDiv.style.display = 'block';
+            
+            let planHTML = `
+                <h3>Your Race Caffeine Plan</h3>
+                <p>Target Race Time: ${raceTime.toLocaleTimeString()}</p>
+                <p>Race Duration: ${durationHours}h ${durationMinutes}m</p>
+                <p>Total Caffeine: ${caffeineAmount}mg</p>
+                <div class="plan-steps">
+            `;
+
+            doses.forEach((dose, index) => {
+                const timeFromRace = Math.round((dose.time - raceTime) / 60000); // minutes from race start
+                const timeLabel = timeFromRace < 0 ? 
+                    `${Math.abs(timeFromRace)} minutes before race start` : 
+                    `${timeFromRace} minutes after race start`;
+                
+                planHTML += `
+                    <div class="plan-step">
+                        <strong>Dose ${index + 1}:</strong> ${dose.amount}mg at ${dose.time.toLocaleTimeString()}
+                        <br>
+                        <em>${dose.note}</em>
+                        <br>
+                        <small>${timeLabel}</small>
+                    </div>
+                `;
+            });
+
+            planHTML += `
+                </div>
+                <p><strong>Note:</strong> This plan is designed based on current research for optimal caffeine timing. 
+                Adjust based on your personal tolerance and experience. For races longer than 3 hours, 
+                maintenance doses are scheduled every 2 hours to maintain effective caffeine levels.</p>
+            `;
+
+            planDiv.innerHTML = planHTML;
+        }
+    </script>
+</body>
+</html>
