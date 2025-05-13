@@ -44,6 +44,20 @@
             color: #7f8c8d;
             font-size: 14px;
         }
+        .drink-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            align-items: center;
+        }
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            background-color: white;
+        }
         button {
             background-color: #3498db;
             color: white;
@@ -84,6 +98,12 @@
             width: 100% !important;
             height: 300px !important;
         }
+        .drink-info {
+            font-size: 14px;
+            color: #7f8c8d;
+            text-align: center;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -97,16 +117,24 @@
             </div>
             <div class="stat-box">
                 <div class="stat-value" id="coffeeCount">0</div>
-                <div class="stat-label">Cups Today</div>
+                <div class="stat-label">Drinks Today</div>
             </div>
         </div>
 
-        <div style="text-align: center;">
-            <button onclick="addCoffee()">Add Coffee</button>
+        <div class="drink-selector">
+            <select id="drinkSelect" onchange="updateDrinkInfo()">
+                <option value="coffee">Coffee (95mg)</option>
+                <option value="monster">Monster Energy 500ml (180mg)</option>
+                <option value="redbull">Red Bull 250ml (80mg)</option>
+                <option value="tea">Black Tea (47mg)</option>
+                <option value="espresso">Espresso (63mg)</option>
+            </select>
+            <button onclick="addDrink()">Add Drink</button>
         </div>
+        <div class="drink-info" id="drinkInfo"></div>
 
         <div class="history">
-            <h2>Coffee History</h2>
+            <h2>Drink History</h2>
             <div id="historyList"></div>
         </div>
     </div>
@@ -117,6 +145,15 @@
     </div>
 
     <script>
+        // Drink definitions
+        const drinks = {
+            coffee: { name: "Coffee", caffeine: 95, unit: "mg" },
+            monster: { name: "Monster Energy 500ml", caffeine: 180, unit: "mg" },
+            redbull: { name: "Red Bull 250ml", caffeine: 80, unit: "mg" },
+            tea: { name: "Black Tea", caffeine: 47, unit: "mg" },
+            espresso: { name: "Espresso", caffeine: 63, unit: "mg" }
+        };
+
         // Initialize the chart
         const ctx = document.getElementById('caffeineChart').getContext('2d');
         const caffeineChart = new Chart(ctx, {
@@ -171,6 +208,14 @@
         
         // Initial update
         updateStats();
+        updateDrinkInfo();
+
+        function updateDrinkInfo() {
+            const selectedDrink = document.getElementById('drinkSelect').value;
+            const drink = drinks[selectedDrink];
+            document.getElementById('drinkInfo').textContent = 
+                `${drink.name}: ${drink.caffeine}${drink.unit} of caffeine`;
+        }
 
         function updateStats() {
             // Get current caffeine level
@@ -197,7 +242,7 @@
                     caffeineChart.update();
                 });
 
-            // Get coffee history
+            // Get drink history
             fetch('/api/events')
                 .then(response => response.json())
                 .then(events => {
@@ -219,9 +264,18 @@
                 });
         }
 
-        function addCoffee() {
+        function addDrink() {
+            const selectedDrink = document.getElementById('drinkSelect').value;
+            const drink = drinks[selectedDrink];
+            
             fetch('/api/add-coffee', {
-                method: 'POST'
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    amount: drink.caffeine
+                })
             })
             .then(response => response.json())
             .then(() => {

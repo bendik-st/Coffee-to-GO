@@ -11,15 +11,18 @@ import (
 
 // --- Configuration Constants ---
 const (
-	caffeinePerCupMg = 95.0    // Average caffeine in a cup of coffee (mg)
-	halfLifeHours    = 5.0     // Average half-life of caffeine in hours
-	serverPort       = ":8080" // Port for the HTTP server
+	serverPort = ":8080" // Port for the HTTP server
 )
 
 // CoffeeIntakeEvent stores the time and amount of a single coffee intake.
 type CoffeeIntakeEvent struct {
 	Time   time.Time `json:"time"`
 	Amount float64   `json:"amount"`
+}
+
+// DrinkRequest represents the incoming request to add a drink
+type DrinkRequest struct {
+	Amount float64 `json:"amount"`
 }
 
 // Tracker holds the state of coffee intake events.
@@ -36,22 +39,22 @@ func NewTracker() *Tracker {
 	}
 }
 
-// AddCoffee logs a new coffee intake event with the current time.
-func (t *Tracker) AddCoffee() {
-	t.mu.Lock() // Lock to ensure thread safety when modifying events
+// AddDrink logs a new drink intake event with the current time and specified amount.
+func (t *Tracker) AddDrink(amount float64) {
+	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	event := CoffeeIntakeEvent{
 		Time:   time.Now(),
-		Amount: caffeinePerCupMg,
+		Amount: amount,
 	}
 	t.events = append(t.events, event)
-	fmt.Printf("Logged coffee at %s. Current count: %d\n", event.Time.Format("15:04:05"), len(t.events))
+	fmt.Printf("Logged drink at %s. Current count: %d\n", event.Time.Format("15:04:05"), len(t.events))
 }
 
 // CalculateCurrentCaffeineLevel calculates the total estimated caffeine in the system.
 func (t *Tracker) CalculateCurrentCaffeineLevel() float64 {
-	t.mu.Lock() // Lock for thread-safe access to events
+	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	now := time.Now()
@@ -71,7 +74,7 @@ func (t *Tracker) CalculateCurrentCaffeineLevel() float64 {
 		}
 
 		// Caffeine decay formula: C = C0 * (0.5)^(t / T_half)
-		remainingCaffeine := event.Amount * math.Pow(0.5, timeElapsedHours/halfLifeHours)
+		remainingCaffeine := event.Amount * math.Pow(0.5, timeElapsedHours/5.0) // 5 hours half-life
 		totalCaffeine += remainingCaffeine
 	}
 
@@ -99,7 +102,14 @@ func main() {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		tracker.AddCoffee()
+
+		var req DrinkRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			return
+		}
+
+		tracker.AddDrink(req.Amount)
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{"status": "success"})
 	})
