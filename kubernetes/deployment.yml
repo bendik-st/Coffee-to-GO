@@ -19,7 +19,7 @@ spec:
         runAsUser: 6666
         runAsGroup: 6666
       containers:
-      - image: coffee-to-go:latest
+      - image: coffee-to-go:v3
         name: coffee-to-go
         ports:
         - containerPort: 8080
