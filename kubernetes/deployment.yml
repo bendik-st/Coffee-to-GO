@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: coffe-to-go
+  name: coffe-to-go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: coffe-to-go
+  template:
+    metadata:
+      labels:
+        app: coffe-to-go
+    spec:
+      hostUsers: false
+      securityContext:
+        runAsUser: 6666
+        runAsGroup: 6666
+      containers:
+      - image: coffee-to-go:latest
+        name: coffee-to-go
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          privileged: false
