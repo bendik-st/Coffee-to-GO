@@ -50,7 +50,9 @@ A simple web-based caffeine tracker built with Go for the backend and HTML/JS fo
 ## Project Structure
 
 - `caffeine_tracker.go` — Go backend with HTTP API
+- `go.mod` - Module file for image building
 - `static/index.html` — Frontend HTML/JS/CSS
+- `kubernetes/deployment.yml` — Kubernetes manifest for a hardened Deployment
 
 ## API Endpoints
 - `POST /api/add-coffee` — Log a new coffee
