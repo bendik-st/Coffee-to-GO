@@ -19,13 +19,13 @@ spec:
         runAsUser: 6666
         runAsGroup: 6666
       containers:
-      - image: coffee-to-go:v3
+      - image: coffee-to-go:v1
         name: coffee-to-go
         ports:
         - containerPort: 8080
           protocol: TCP
           name: http
         securityContext:
-          readOnlyRootFilesystem: true
+#          readOnlyRootFilesystem: true  #Data tracker doesnt like this, so this is not supported atm
           allowPrivilegeEscalation: false
           privileged: false
