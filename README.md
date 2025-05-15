@@ -44,6 +44,7 @@ A simple web-based caffeine tracker built with Go for the backend and HTML/JS fo
    Access the app on http://localhost:8080
 
    Kubernetes:
+
    Upload the image to your registry and use the ./kubernetes/deployment.yml with correct image-tag
 
 ## Project Structure
