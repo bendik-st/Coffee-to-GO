@@ -36,6 +36,7 @@ A simple web-based caffeine tracker built with Go for the backend and HTML/JS fo
    docker build -t coffee-to-go:latest .
    ```
 4. **Run in container environment**
+
    Docker: 
    ```sh
    docker run -d -p 8080:8080 coffee-to-go:latest
