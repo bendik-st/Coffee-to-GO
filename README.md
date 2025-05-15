@@ -25,6 +25,26 @@ A simple web-based caffeine tracker built with Go for the backend and HTML/JS fo
    - Go to: [http://localhost:8080](http://localhost:8080)
    - Use the web interface to add coffee and view your stats!
 
+## How to build Docker image
+
+1. **Make sure you're running Docker**
+
+2. **Clone or Download this Repository**
+
+3. **Build the image**
+   ```sh
+   docker build -t coffee-to-go:latest .
+   ```
+4. **Run in container environment**
+   Docker: 
+   ```sh
+   docker run -d -p 8080:8080 coffee-to-go:latest
+   ```
+   Access the app on http://localhost:8080
+
+   Kubernetes:
+   Upload the image to your registry and use the ./kubernetes/deployment.yml with correct image-tag
+
 ## Project Structure
 
 - `caffeine_tracker.go` — Go backend with HTTP API
